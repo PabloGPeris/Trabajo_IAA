@@ -22,8 +22,9 @@ sigma_validos = sigma_total(ind_validos);
 % datos normalizados
 data_n = ((data-media_validos)./sigma_validos);
 
-save datos_normalizacion data_n sigma_validos media_validos sigma_validos
-% hay que hacer función que normalice otros datos (los datos de test
+save datos_normalizacion data_n sigma_validos media_validos
+% hay que hacer función que normalice otros datos (los datos de test deben
+% normalizarse rápido, así como PCAarse rápido)
 
 %% PCA
 % hace el PCA
@@ -53,17 +54,32 @@ ylim([0 inf])
 
 save datos_PCA coeff D_pca data_pca
 
-%% Reconstrucción - lo meteré en alguna función
+%% Reconstrucción - lo meteré en alguna función 
+% (completamente innecesario, pero queda bonito) - igual vale para ver si
+% el número de dimensiones es suficiente
 data_rec_n = (coeff(:, 1:D_pca)*data_pca);
 data_rec = zeros(height(Trainnumbers.image), width(Trainnumbers.image));
 data_rec(ind_validos, : ) = data_rec_n.*sigma_validos + media_validos;
 
-
-numero = 11;
+%% Dibujos 
+numero = [3 12 300 560]; % cambiar esto para ver magia
 
 figure;
-subplot(1,2,1)
-digit_display(Trainnumbers.image, numero)
-subplot(1,2,2)
-digit_display(data_rec, numero)
+subplot(2,4,1)
+digit_display(Trainnumbers.image, numero(1))
+subplot(2,4,2)
+digit_display(data_rec, numero(1))
+subplot(2,4,3)
+digit_display(Trainnumbers.image, numero(2))
+subplot(2,4,4)
+digit_display(data_rec, numero(2))
+subplot(2,4,5)
+digit_display(Trainnumbers.image, numero(3))
+subplot(2,4,6)
+digit_display(data_rec, numero(3))
+subplot(2,4,7)
+digit_display(Trainnumbers.image, numero(4))
+subplot(2,4,8)
+digit_display(data_rec, numero(4))
+
 
