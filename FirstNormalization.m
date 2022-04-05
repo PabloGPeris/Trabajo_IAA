@@ -9,6 +9,7 @@
 clear
 load Trainnumbers.mat
 
+%% Normalización
 % desv. típica y media de cada variable
 sigma_total = std(Trainnumbers.image, 0, 2);
 media_total = mean(Trainnumbers.image, 2);
@@ -17,12 +18,12 @@ media_total = mean(Trainnumbers.image, 2);
 ind_validos = find(sigma_total ~= 0); 
 data = Trainnumbers.image(ind_validos,:); % datos con  desv típica ~= 0
 
-% media y sigma de los datos válidos - PROPONED OTRO NOMBRE PLZ
+% media y sigma de los datos válidos
 media_validos = media_total(ind_validos);
 sigma_validos = sigma_total(ind_validos);
 
 % datos normalizados
-data_n = ((data-media_validos)./sigma_validos);
+data_n = ((data - media_validos)./sigma_validos);
 
 % guardado de datos
 save datos_normalizacion data_n sigma_validos media_validos ind_validos
