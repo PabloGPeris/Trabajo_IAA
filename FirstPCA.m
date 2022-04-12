@@ -1,17 +1,22 @@
 %% Trabajo Inteligencia Artificial Aplicada
 %% First PCA
 % Primera PCA que se hace, donde se obtienen los coeficientes y todas esas
-% cosas de la PCA, guardando tanto los datos como ... PATATA
-
+% cosas de la PCA, guardando tanto los datos como los coeficientes y el
+% número de dimensiones. Este script sirve, sobre todo, para las
+% representaciones gráficas;
 clear
-load datos_normalizacion.mat
+load("datos_normalizacion.mat", "data_n");
 
 %% Variables
+
 % en tanto por uno, máximo error de reconstrucción que queremos poner
-MSE_admisible = 0.3;
+MSE = 0.7;
+% otra opción: decir el número de variables que quieres directamente
+% PCA = 50;
+% comentar el que no quieras
 
 % esta variable indica si se quiere hacer la reconstrucción o no
-rec = true; 
+rec = false; 
 
 %% PCA
 % hace el PCA
@@ -25,26 +30,43 @@ rec = true;
 % más claro así puesto
 MSE_esperado = (sum(latent) - cumsum(latent))/sum(latent);
 
-% número de dimensiones de PCA con las que nos quedamos según el MSE
-% admisible
-D_pca = find(MSE_esperado <= MSE_admisible, 1)
+if ~exist('D_pca', 'var')
+    % número de dimensiones de PCA con las que nos quedamos según el MSE
+    % admisible
+    PCA = find(MSE_esperado <= MSE, 1)
+    
+    % datos ya de dimensionalidad reducida
+    data_r_pca = data_pca(:, 1:PCA)'; 
+    
+    % otra forma de obtener los datos de dimensionalidad reducida sería:
+    % data_r_pca = coeff_pca(:,1:D_pca)'*data_n ;
+    
+%     figure(1);
+%     plot(0:length(latent), [1 MSE_esperado'], 'LineWidth', 1.5);
+%     xline(D_pca, 'HandleVisibility','off')
+%     yline(MSE_admisible, 'HandleVisibility','off')
+%     xlabel('nº de dimensiones')
+%     ylabel('MSE esperado (por unidad)')
+%     xlim([0 length(latent)])
+%     ylim([0 inf])
+else
+    % datos ya de dimensionalidad reducida
+    data_r_pca = data_pca(:, 1:PCA)'; 
 
-% datos ya de dimensionalidad reducida
-data_r_pca = data_pca(:, 1:D_pca)'; 
+    % MSE esperado que cometemos
+    MSE = MSE_esperado(PCA)
 
-% otra forma de obtener los datos de dimensionalidad reducida sería:
-% data_r_pca = coeff_pca(:,1:D_pca)'*data_n ;
+%     figure(1);
+%     plot(0:length(latent), [1 MSE_esperado'], 'LineWidth', 1.5);
+%     xline(D_pca, 'HandleVisibility','off')
+%     yline(MSE_admisible, 'HandleVisibility','off')
+%     xlabel('nº de dimensiones')
+%     ylabel('MSE esperado (por unidad)')
+%     xlim([0 length(latent)])
+%     ylim([0 inf])
+end
 
-figure(1);
-plot(0:length(latent), [1 MSE_esperado'], 'LineWidth', 1.5);
-xline(D_pca, 'HandleVisibility','off')
-yline(MSE_admisible, 'HandleVisibility','off')
-xlabel('nº de dimensiones')
-ylabel('MSE esperado (por unidad)')
-xlim([0 length(latent)])
-ylim([0 inf])
-
-save datos_PCA coeff_pca D_pca data_r_pca
+save datos_PCA data_pca coeff_pca PCA data_r_pca latent
 
 %% Reconstrucción
 % vale para ver si el número de dimensiones es suficiente
@@ -54,7 +76,7 @@ if rec  %#ok<*UNRCH>
     D_inicial = height(Trainnumbers.image); % nº dim iniciales
 
     % datos reconstruidos normalizados
-    data_rec_n = coeff_pca(:, 1:D_pca)*data_r_pca;
+    data_rec_n = coeff_pca(:, 1:PCA)*data_r_pca;
 
     % datos reconstruidos desnormalizados
     data_rec = zeros(D_inicial, N);
