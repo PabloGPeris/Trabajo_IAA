@@ -8,7 +8,7 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 20;
+PCA = 23;
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
@@ -86,7 +86,8 @@ for k = 1:K
     time_train_KM(k) = mean(time_train);
     time_class_KM(k) = mean(time_class);
 
-    disp("k-means k = " + num2str(k) + "/" +num2str(K) + " - Acc: " + num2str(accuracy_KM(k)))
+    disp("k-means k = " + num2str(k) + "/" +num2str(K) + " - Acc: " + ...
+        num2str(accuracy_KM(k)) + " max(" + num2str(accuracy_KM_max(k))+ ")" )
 end
 
 save BayesKmeans.mat time_class_KM time_train_KM accuracy_KM accuracy_KM_min accuracy_KM_max
@@ -94,8 +95,10 @@ save BayesKmeans.mat time_class_KM time_train_KM accuracy_KM accuracy_KM_min acc
 %% Figuras
 figure(15);
 plot(1:K, accuracy_KM*100, 'LineWidth', 1.5);
+hold on
 plot(1:K, accuracy_KM_min*100, '--', 'LineWidth', 1.5);
 plot(1:K, accuracy_KM_max*100, '--', 'LineWidth', 1.5);
+hold off
 xlabel('k')
 ylabel('Accuracy (%)')
 legend('mean', 'min', 'max')
