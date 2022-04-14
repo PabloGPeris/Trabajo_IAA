@@ -60,14 +60,14 @@ for j = 1:100
 end
 
 %% Figuras
-figure(12);
+figure(11);
 plot(1:100, accuracy_PCA*100, 'LineWidth', 1.5);
 xlabel('PCA')
 ylabel('Accuracy (%)')
 % legend('ccuracy')
 grid on
 
-figure(13);
+figure(12);
 plot(1:100, time_train_PCA*1000, 1:100, time_class_PCA*1000, 'LineWidth', 1.5);
 xlabel('PCA')
 ylabel('Time (ms)')
