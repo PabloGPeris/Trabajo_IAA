@@ -1,15 +1,55 @@
 %% Carga de datos ya normalizados
-%clear
-load datos_normalizacion.mat
-%load datos_normalizacion_test.mat
-%load Testnumbers.mat
+clear all
 load Trainnumbers.mat
+load datos_normalizacion.mat
+[D,N]=size(Trainnumbers.image); % nº dim iniciales   nº datos
 
-[D,N]=size(Trainnumbers.image); 
 
+%% LDA
+sep_data = class_separation(data_n, Trainnumbers.label);
 
+[SC, SW, SB, mC] = scatter_matrices(sep_data);
+[W_lda,Diag] = eig(inv(SW)*SB);
+latent = diag(Diag);
 
-%% Propuesta: cambiar el número de clases K-means??
+%% Para observar la evolución del MSE en función de las dimensiones
+% Hasta que dimesiones queremos testear
+Num_dim = 100;
+
+D_lda_max = length(Diag);
+dif = D_lda_max-Num_dim;
+MSE = zeros(1,dif);
+
+for D_lda = D_lda_max-1:-1:Num_dim   
+
+    % LDA
+   
+    %datos ya dimensionalidad reducida
+    proyectados = W_lda(:,1:D_lda)'*data_n;
+    % datos reconstruidos normalizados
+    reconstruidos = W_lda(:,1:D_lda)*proyectados;
+
+    reconstruidos_des = zeros(D,N);
+    % datos reconstruidos desnormalizados
+    reconstruidos_des(ind_validos, : ) = (reconstruidos.*sigma_validos) + media_validos;
+    % reconstruidos_des = real(reconstruidos_des);
+
+    % Error
+    MSE(dif) = D*mse(Trainnumbers.image-reconstruidos_des);
+
+    dif = dif - 1;
+
+end
+
+%% No se plotea la parte imaginaria
+                
+figure;
+plot(D_lda_max-1:-1:Num_dim, MSE(1,end:-1:1), 'LineWidth', 1.5); 
+%plot(D_lda_max:-1:Num_dim, MSE(D_lda_max:-1:Num_dim), 'LineWidth', 1.5);  
+%plot(Num_dim:D_lda_max, MSE(Num_dim:D_lda_max), 'LineWidth', 1.5);
+xlabel('nº de dimensiones')
+ylabel('MSE (por unidad)')
+xlim([Num_dim 672])
 
 
 
@@ -18,68 +58,34 @@ load Trainnumbers.mat
 D_lda = 673;    %Dimensiones que queremos para el LDA (673,9)Límites 
 
 
-%% LDA
-sep_data = class_separation(data_n, Trainnumbers.label);
-[SC, SW, SB, mC] = scatter_matrices(sep_data);
-
-[W,Diag] = eig(inv(SW)*SB);
-
 %%
-
-proyectados_train = W(:,D_lda)'*data_n;
-reconstruidos_train = W(:,D_lda)*proyectados_train;
-
-%proyectados_test = W(:,D_lda)'*data_n_test;
-%reconstruidos_test = W(:,D_lda)*proyectados_test;
-
-%% Desnormalización de los datos proyectados
-
-for i=1:N
-    reconstruidos_train_des(:,i)=(reconstruidos_train(:,i).*sigma_validos) + media_validos;
-end
-% for i=1:N
-%     reconstruidos_test_des(:,i)=(reconstruidos_test(:,i).*sigma_validos) + media_validos;
-% end 
-% proyectados_test_des = (proyectados_train.*sigma_validos) + media_validos;
-
-% MSE = D*mse(Testnumbers.image-reconstruidos_test_des);
-
-%%
-%sep_data = class_separation(valor, class)                                             %Como funciona esto??
+%datos ya dimensionalidad reducida
+proyectados = W_lda(:,1:D_lda)'*data_n;
+% datos reconstruidos normalizados
+reconstruidos = W_lda(:,1:D_lda)*proyectados; 
 
 
-% Queremos saber la longitud de las clases 
-% x1t -> numero de etiquetas de la clase 1
-% 
-% figure;
-% plot(reconstruidos_test_des(1,:),reconstruidos_test_des(2,:),'b*')
-% hold on;
-% plot(proyectados_test_des(1,:),proyectados_test_des(2,:),'g*')  
-% hold on;
-%plot(Testnumbers.image(1,x0t),Testnumbers.image(2,x0t),'r*'); 
-% hold on;
-% plot(Testnumbers.image(1,x1t),Testnumbers.image(2,x1t),'r*'); 
-% hold on;
-% plot(Testnumbers.image(1,x2t),Testnumbers.image(2,x2t),'k*');
-% title('Datos test desnormalizados');
+reconstruidos_des = zeros(D,N);
+% datos reconstruidos desnormalizados
+reconstruidos_des(ind_validos, : ) = (reconstruidos.*sigma_validos) + media_validos;
+% reconstruidos_des = real(reconstruidos_des);
 
-
-
-
-
-%% Figuras 
-numero = 12; % cambiar esto para ver magia
-
+rp = randperm(N, 4);
 figure;
-subplot(1,2,1)
-digit_display(Trainnumbers.image, numero)
-subplot(1,2,2)
-digit_display(data_rec, numero)
+for i = 1:4
+    subplot(2, 4, i*2 - 1)
+    digit_display(Trainnumbers.image, rp(i))
+    subplot(2, 4, i*2)
+    digit_display(reconstruidos_des, rp(i))    %Los valores reconstruidos dan valores muy raros, 
+                                                    %La función de mostrar
+                                                    %siempre mustra los
+                                                    %mismo, me imagino
+                                                    %porque falla
+end
 
 
-
-
-
+% Error
+MSE = D*mse(Trainnumbers.image-reconstruidos_des); 
 
 
 
