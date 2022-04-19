@@ -52,4 +52,4 @@ conf_mat = confusionchart(label_test, label_pred);
 
 accuracy = trace(conf_mat.NormalizedValues)/round(N*(1-PD))
 
-save Bayes.m bayesModel PCA
+save Bayes.mat bayesModel PCA
