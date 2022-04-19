@@ -9,6 +9,7 @@ function [SC, SW, SB, mC] = scatter_matrices(sep_data)
 nC = length(sep_data);
 
 SC = cell(1, nC);
+% mC = media of Clusters
 mC = cell(1, nC);
 SB = 0;
 SW = 0;
