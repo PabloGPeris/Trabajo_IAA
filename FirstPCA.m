@@ -5,7 +5,7 @@
 % número de dimensiones. Este script sirve, sobre todo, para las
 % representaciones gráficas;
 clear
-load("datos_normalizacion.mat", "data_n");
+load datos_normalizacion.mat
 
 %% Variables
 
@@ -16,7 +16,7 @@ MSE = 0.7;
 % comentar el que no quieras
 
 % esta variable indica si se quiere hacer la reconstrucción o no
-rec = false; 
+rec = true; 
 
 %% PCA
 % hace el PCA
