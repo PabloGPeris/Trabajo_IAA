@@ -24,11 +24,10 @@ N = length(Trainnumbers.label);
 accuracy = 0;
 conf_mat = zeros(10, 10);
 
-% Creamos red neuronal
-net = feedforwardnet([2 3 2 ], 'traingd');
-
-
-%net.layers{1}
+% Creamos red neuronal con tres capas con 2 neuronas, 3 neuronas y 2
+% neuronas respectivamente.
+net = feedforwardnet([2 3 2], 'traingd');
+%net.layers{4}.size = 10
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
@@ -38,7 +37,7 @@ data_r_pca = data_pca(:, 1:PCA)';
 
 for i = 1:I
 
-    %% Separar datos en train y test aleatoriamente
+    % Separar datos en train y test aleatoriamente
     % los datos se mezclan (permutan y se separan)
     ind_random = randperm(N);
     
@@ -46,20 +45,25 @@ for i = 1:I
     data_train = data_r_pca(:, ind_random(1:round(N*PD)));
     label_train = Trainnumbers.label(ind_random(1:round(N*PD)));
     
+    matrix_label_train = digits2matrix(label_train);
+
     % test
     data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
     label_test = Trainnumbers.label(ind_random(round(N*PD)+1:end));
+    
+    matrix_label_test = digits2matrix(label_test);
 
     %% Multilayer Perceptron
-
-    net = train(net, data_train, label_train);
     
-    label_pred = net(data_test);
-
+    net = train(net, data_train, matrix_label_train);
+    
+%     label_pred = net(data_test);
+    label_pred = predict(net., data_test)
+    
     % test (classification)
-    perf1 = perform(net, data_test, label_test);
-
-    accuracy = accuracy + sum(label_test == label_pred)/round(N*(1-PD));
+%     perf1 = perform(net, data_test, matrix_label_test);
+    
+    accuracy = accuracy + sum(matrix_label_test == label_pred)/round(N*(1-PD));
 %     conf_mat = conf_mat + confusionmat(label_test, label_pred);
 
     disp("iteration " + num2str(i) + "/" + num2str(I))
@@ -76,6 +80,8 @@ disp(net.outputConnect)
 disp(net.layers)
 disp(net.biases)
 disp(net.outputs)
+
+x = net.layers{1};
 
 accuracy = accuracy / I
 %% Figuras
