@@ -26,7 +26,7 @@ conf_mat = zeros(10, 10);
 
 % Creamos red neuronal con tres capas con 2 neuronas, 3 neuronas y 2
 % neuronas respectivamente.
-net = feedforwardnet([10 6 2], 'traingd');
+net = feedforwardnet([4], 'traingd');
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
