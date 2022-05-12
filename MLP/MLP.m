@@ -15,7 +15,7 @@ PCA = 20;
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 10;
+I = 10; % antes estaba en 10, lo he bajao a 3 pa que tarde menos
 
 %% PCA
 % nº datos
@@ -24,9 +24,9 @@ N = length(Trainnumbers.label);
 accuracy = 0;
 conf_mat = zeros(10, 10);
 
-% Creamos red neuronal
-net = feedforwardnet([2 3 2 ], 'traingd');
-net.layers{4}.size = 10
+% Creamos red neuronal con tres capas con 2 neuronas, 3 neuronas y 2
+% neuronas respectivamente.
+net = feedforwardnet([4], 'traingd');
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
@@ -55,32 +55,34 @@ for i = 1:I
     %% Multilayer Perceptron
     
     net = train(net, data_train, matrix_label_train);
-    
     label_pred = net(data_test);
     
+    label_pred2 = vec2ind(label_pred)
+%     label_pred = predict(net.{1,1}, data_test)
+    
     % test (classification)
-%     perf1 = perform(net, data_test, matrix_label_test);
-
-    accuracy = accuracy + sum(matrix_label_test == label_pred)/round(N*(1-PD));
+%      perf1 = perform(net, data_test, matrix_label_test);
+    
+    accuracy = accuracy + sum(label_test == label_pred2)/round(N*(1-PD));
 %     conf_mat = conf_mat + confusionmat(label_test, label_pred);
 
     disp("iteration " + num2str(i) + "/" + num2str(I))
 end
 
-disp(net.numInputs)
-disp(net.numLayers)
-disp(net.numOutputs)
-disp(net.numWeightElements)
-disp(net.biasConnect)
-disp(net.inputConnect)
-disp(net.layerConnect)
-disp(net.outputConnect)
-disp(net.layers)
-disp(net.biases)
-disp(net.outputs)
+% disp(net.numInputs)
+% disp(net.numLayers)
+% disp(net.numOutputs)
+% disp(net.numWeightElements)
+% disp(net.biasConnect)
+% disp(net.inputConnect)
+% disp(net.layerConnect)
+% disp(net.outputConnect)
+% disp(net.layers)
+% disp(net.biases)
+% disp(net.outputs)
+% x = net.layers{1};
 
-x = net.layers{1}
-
+% Dividir el accuracy acumulado entre el numero de iteraciones
 accuracy = accuracy / I
 %% Figuras
 % figure(11);
