@@ -17,15 +17,13 @@ PD = 0.8;
 % número de iteraciones en el bucle
 I = 10;
 
-%% PCA
 % nº datos
 N = length(Trainnumbers.label); 
 
 accuracy = 0;
 conf_mat = zeros(10, 10);
 
-% Creamos red neuronal con tres capas con 2 neuronas, 3 neuronas y 2
-% neuronas respectivamente.
+% Creamos red neuronal. Ej: [2 6 4] -> son 3 capas con 2, 6 y 4 neuronas
 net = feedforwardnet([4 4 4], 'traingd');
 
 %% PCA previa (nº de dimensiones)
@@ -33,64 +31,49 @@ net = feedforwardnet([4 4 4], 'traingd');
 data_r_pca = data_pca(:, 1:PCA)';
 
 %%
-
 for i = 1:I
-
+    
     % Separar datos en train y test aleatoriamente
     % los datos se mezclan (permutan y se separan)
     ind_random = randperm(N);
     
-    % train
+    % train data
     data_train = data_r_pca(:, ind_random(1:round(N*PD)));
     label_train = Trainnumbers.label(ind_random(1:round(N*PD)));
     
+    % pasamos las etiquetas a matriz para que haya 10 salidas
     matrix_label_train = digits2matrix(label_train);
-
-    % test
+    
+    % test data
     data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
     label_test = Trainnumbers.label(ind_random(round(N*PD)+1:end));
     
+    % pasamos las etiquetas a matriz para que haya 10 salidas
     matrix_label_test = digits2matrix(label_test);
-
-    %% Multilayer Perceptron
     
+    % Entrenamos la red
     net = train(net, data_train, matrix_label_train);
     
-<<<<<<< Updated upstream
+    % Predicciones de la red
     label_pred = net(data_test);
-=======
     label_pred2 = vec2ind(label_pred);
     label_pred2 = label_pred2 - 1;
-%     label_pred = predict(net.{1,1}, data_test)
->>>>>>> Stashed changes
     
     % test (classification)
 %     perf1 = perform(net, data_test, matrix_label_test);
-
-    accuracy = accuracy + sum(matrix_label_test == label_pred)/round(N*(1-PD));
+    
+    % Calcular el accuracy
+    accuracy = accuracy + sum(label_test == label_pred2)/round(N*(1-PD));
 %     conf_mat = conf_mat + confusionmat(label_test, label_pred);
-
+    
     disp("iteration " + num2str(i) + "/" + num2str(I))
 end
-
-<<<<<<< Updated upstream
-disp(net.numInputs)
-disp(net.numLayers)
-disp(net.numOutputs)
-disp(net.numWeightElements)
-disp(net.biasConnect)
-disp(net.inputConnect)
-disp(net.layerConnect)
-disp(net.outputConnect)
-disp(net.layers)
-disp(net.biases)
-disp(net.outputs)
 
 % Dividir el accuracy acumulado entre el numero de iteraciones
 accuracy = accuracy / I;
 disp ("accuracy: ")
 disp(accuracy*100)
->>>>>>> Stashed changes
+
 %% Figuras
 % figure(11);
 % confusionchart(conf_mat, 0:9, ...
