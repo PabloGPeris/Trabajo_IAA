@@ -24,7 +24,9 @@ accuracy = 0;
 conf_mat = zeros(10, 10);
 
 % Creamos red neuronal. Ej: [2 6 4] -> son 3 capas con 2, 6 y 4 neuronas
-net = feedforwardnet([4 4 4], 'traingd');
+% la de luis: [10 20 6]
+% la mejor de javi hasta el momento [4 4 4]
+net = feedforwardnet([10 20 6], 'traingd'); 
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
@@ -64,7 +66,7 @@ for i = 1:I
     
     % Calcular el accuracy
     accuracy = accuracy + sum(label_test == label_pred2)/round(N*(1-PD));
-%     conf_mat = conf_mat + confusionmat(label_test, label_pred);
+     conf_mat = conf_mat + confusionmat(label_test, label_pred2);
     
     disp("iteration " + num2str(i) + "/" + num2str(I))
 end
