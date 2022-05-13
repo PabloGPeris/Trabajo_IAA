@@ -23,13 +23,13 @@ for i = 1:I
     ind_random = randperm(N);
     
     % train
-    data_train = Trainnumbers.image(:, ind_random(1:round(N*PD)));
+    data_train = data_(:, ind_random(1:round(N*PD)));
     label_train = Trainnumbers.label(ind_random(1:round(N*PD)));
     
     matrix_label_train = digits2matrix(label_train);
 
     % test
-    data_test = Trainnumbers.image(:, ind_random(round(N*PD)+1:end));
+    data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
     label_test = Trainnumbers.label(ind_random(round(N*PD)+1:end));
     
     matrix_label_test = digits2matrix(label_test);

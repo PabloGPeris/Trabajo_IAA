@@ -26,7 +26,6 @@ conf_mat = zeros(10, 10);
 
 % Creamos red neuronal
 net = feedforwardnet([2 3 2 ], 'traingd');
-net.layers{4}.size = 10
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
