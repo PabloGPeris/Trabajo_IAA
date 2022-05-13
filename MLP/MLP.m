@@ -24,9 +24,9 @@ N = length(Trainnumbers.label);
 accuracy = 0;
 conf_mat = zeros(10, 10);
 
-% Creamos red neuronal
-net = feedforwardnet([2 3 2 ], 'traingd');
-net.layers{4}.size = 10
+% Creamos red neuronal con tres capas con 2 neuronas, 3 neuronas y 2
+% neuronas respectivamente.
+net = feedforwardnet([4 4 4], 'traingd');
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
@@ -56,7 +56,13 @@ for i = 1:I
     
     net = train(net, data_train, matrix_label_train);
     
+<<<<<<< Updated upstream
     label_pred = net(data_test);
+=======
+    label_pred2 = vec2ind(label_pred);
+    label_pred2 = label_pred2 - 1;
+%     label_pred = predict(net.{1,1}, data_test)
+>>>>>>> Stashed changes
     
     % test (classification)
 %     perf1 = perform(net, data_test, matrix_label_test);
@@ -67,6 +73,7 @@ for i = 1:I
     disp("iteration " + num2str(i) + "/" + num2str(I))
 end
 
+<<<<<<< Updated upstream
 disp(net.numInputs)
 disp(net.numLayers)
 disp(net.numOutputs)
@@ -79,9 +86,11 @@ disp(net.layers)
 disp(net.biases)
 disp(net.outputs)
 
-x = net.layers{1}
-
-accuracy = accuracy / I
+% Dividir el accuracy acumulado entre el numero de iteraciones
+accuracy = accuracy / I;
+disp ("accuracy: ")
+disp(accuracy*100)
+>>>>>>> Stashed changes
 %% Figuras
 % figure(11);
 % confusionchart(conf_mat, 0:9, ...
