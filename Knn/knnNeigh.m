@@ -19,9 +19,6 @@ I = 50;
 %número de k´s vecinos más cercanos queremos probar 
 K = 10;
 
-
-
-
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
 data_r_pca = data_pca(:, 1:PCA)';

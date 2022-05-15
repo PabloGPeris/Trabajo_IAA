@@ -4,24 +4,16 @@ load Trainnumbers.mat
 load datos_normalizacion.mat
 [D,N]=size(Trainnumbers.image); % nº dim iniciales   nº datos
 
-%% Datos
-% k-means
-k = 5;
-
-%% k - means
-[new_data, new_label] = clustering_kmeans(data_n, Trainnumbers.label, k);
 
 %% LDA
-sep_data = class_separation(new_data, new_label);
+sep_data = class_separation(data_n, Trainnumbers.label);
 
-[~, SW, SB, ~] = scatter_matrices(sep_data);
+[SC, SW, SB, mC] = scatter_matrices(sep_data);
 
-% se usa la pseudoinversa para el cálculo de la matriz
-[coeff_lda,latent_lda] = eig(pinv(SW)*SB, 'vector'); % coeff_lda = W_lda
-[latent_lda, ind] = sort(latent_lda, 'descend');
-coeff_lda = real(coeff_lda(:, ind(1:10*k-1)));
+[W_lda,Diag] = eig(inv(SW)*SB);
+latent = diag(Diag);
 
-save datos_LDA coeff_lda latent_lda
+
 
 %% Para observar la evolución del MSE en función de las dimensiones
 % Hasta que dimesiones queremos testear

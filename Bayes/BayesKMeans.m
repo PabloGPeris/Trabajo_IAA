@@ -1,5 +1,5 @@
 %% Trabajo Inteligencia Artificial Aplicada
-%% Bucle de Bayes para PCA
+%% Bucle de Bayes para k-means
 clear
 
 addpath("..\")
@@ -8,18 +8,28 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 15;
+PCA = 20;
+% PCA = "LDA"; % poner esto para que haga LDA en vez de PCA - resultados
+% malos si se hace LDA y k-means con diferentes valores (en verdad, las
+% divisiones del Batesiano debe ser MAYOR o igual que el LDA)
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 10;
+I = 30;
 
 % k-means
-K = 5;
+K = 3;
+
 %% PCA
-data_r_pca = data_pca(:, 1:PCA)'; 
+if isstring(PCA) && PCA == "LDA"
+    load("datos_LDA.mat")
+    load ("datos_normalizacion.mat")
+    data_r_pca = coeff_lda'*data_n ; % en realidad
+else
+    data_r_pca = data_pca(:, 1:PCA)'; 
+end
 
 %% k-means
 N = length(Trainnumbers.label); 
