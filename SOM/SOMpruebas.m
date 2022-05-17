@@ -24,65 +24,31 @@ net.trainParam.epochs = 30;
 % coge solo las dimensiones requeridas en la PCA
 data_r_pca = data_pca(:, 1:PCA)';
 
-%% Separar datos en train y test
+%% Separar datos en cells por clases
+p_sep = class_separation(data_r_pca, etiquetas); % función mía
+
+% Separar cada cell de p_sep en train y test
 % nº datos
-N = length(Trainnumbers.label);
+N = length(p_sep{1});
 
 % los datos se mezclan (permutan y se separan)
 ind_random = randperm(N);
 
 indices_separacion = ind_random(1:round(N*PD));
 
-% train
-data_train = data_r_pca(:, ind_random(1:round(N*PD)));
-label_train = etiquetas(ind_random(1:round(N*PD)));
+% p_sep_train = {}
+% p_sep_test = {}
 
-% test
-data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
-label_test = etiquetas(ind_random(round(N*PD)+1:end));
-
+for i = 1:10
+    p_sep_train{i} = p_sep{i}(:, ind_random(1:round(N*PD)));
+    p_sep_test{i} = p_sep{i}(:, ind_random(round(N*PD)+1:end));
+end
 
 %% Entrenar SOM
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
-net = train(net,data_train');
+net = train(net,p_sep_train);
 
-% view(net)
-
-% figure(1)
-% plotsompos(net)
-% hold on
-% gscatter(p.valor(1,:), p.valor(2,:), p.clase, 'gc')
-% hold off
-
-% figure(2)
-% plotsomtop(net)
-% hold off
-
-%% Asignar valor a cada neurona
-p_sep = class_separation(data_r_pca, etiquetas); % función mía
-% p_sep = class_separation(data_train, label_train); % función mía
-% p_sep2 = class_separation(data_r_pca, etiquetas);
-
-%%
-p_sep_junto = [];
-%juntar los cells en una matriz
-for i = 1:10
-    p_sep_junto = [p_sep_junto p_sep{i}];
-end
-
-%%
-p_sep_train = [];
-
-% coger de p_sep, los datos de las posiciones random que hemos usado para
-% separar en 80/20 los datos, y que asi salgan uniformes
-for i = 1:10
-    p_sep_junto_train = p_sep_junto(:, indices_separacion);
-end
-
-p_sep_train = class_separation(p_sep_junto_train, label_train)
-
-%%
-
+%% Asignar valor (una etiqueta) a cada neurona
 n_clases = length(p_sep_train);
 n_apariciones = zeros(n_clases, n_neuronas);
 
@@ -94,12 +60,12 @@ for i = 1:n_clases
     n_apariciones(i,:) = sum(neuronas_activadas(:) == (1:n_neuronas));
 end
 
-%% cada neurona será de la clase que más la haya activado
+% cada neurona será de la clase que más la haya activado
 [~, clase] = max(n_apariciones)
 
 %% c) Clasificar datos de test
 % mete los datos de test y obtiene neuronas activadas
-neuronas_activadas_test = vec2ind(net(t.valor));
+ neuronas_activadas_test = vec2ind(net(p_sep_test));
 % 
 % % mira a qué clase pertenece esa neurona, y lo asigna
 % clase_predicha = clase(neuronas_activadas_test);

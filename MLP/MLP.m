@@ -1,5 +1,6 @@
 %% Trabajo Inteligencia Artificial Aplicada
-%% Múltiples Bayes para hacer pruebas
+% Multilayer Perceptron
+
 clear
 close all
 
@@ -15,7 +16,7 @@ PCA = 20;
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 10;
+I = 2;
 
 % nº datos
 N = length(Trainnumbers.label); 
@@ -26,7 +27,10 @@ conf_mat = zeros(10, 10);
 % Creamos red neuronal. Ej: [2 6 4] -> son 3 capas con 2, 6 y 4 neuronas
 % la de luis: [10 20 6]
 % la mejor de javi hasta el momento [4 4 4]
-net = feedforwardnet([10 20 6], 'traingd'); 
+net = patternnet([10 8 6], 'traingdm');
+net.trainParam.epochs = 7
+net.trainParam.min_grad = 1e-4
+% net.trainParam
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
@@ -43,14 +47,14 @@ for i = 1:I
     data_train = data_r_pca(:, ind_random(1:round(N*PD)));
     label_train = Trainnumbers.label(ind_random(1:round(N*PD)));
     
-    % pasamos las etiquetas a matriz para que haya 10 salidas
+    % Pasamos las etiquetas a matriz para que haya 10 salidas
     matrix_label_train = digits2matrix(label_train);
     
     % test data
     data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
     label_test = Trainnumbers.label(ind_random(round(N*PD)+1:end));
     
-    % pasamos las etiquetas a matriz para que haya 10 salidas
+    % Pasamos las etiquetas a matriz para que haya 10 salidas
     matrix_label_test = digits2matrix(label_test);
     
     % Entrenamos la red
