@@ -1,8 +1,4 @@
 
-%https://es.mathworks.com/help/deeplearning/ug/create-simple-deep-learning-network-for-classification.html
-    
-%% Accuracy del 95.6, en la web pone de pasarle 28*28, he pasado 32*32
-
 
 layers = [
     imageInputLayer([32 32 1])
@@ -39,6 +35,10 @@ options = trainingOptions('sgdm', ...
 imdsTrain = imageDatastore("C:\Users\luisb\Desktop\MasterAutomaticayRobotica\1. Inteligencia Artificial Aplicada\Trabajo\ImagenesDeep\lenet\Train","IncludeSubfolders",true,"LabelSource","foldernames");
 
 net = trainNetwork(imdsTrain,layers,options);
+
+%% Nuevo
+
+
 
 %% Testeo
 label_test = load ('../../ImagenesDeep/lenet/label_test.mat');
