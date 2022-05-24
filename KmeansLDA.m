@@ -6,13 +6,11 @@ load datos_normalizacion.mat
 
 %% k-means  dividimos cada clase en K clases
 
-K = 5;
+K = 3;
 
 
-[new_data, new_label] = clustering_kmeans(data_n, Trainnumbers.label(ind_validos), K); % new_data = data_n
+[new_data, new_label] = clustering_kmeans(data_n, Trainnumbers.label, K); % new_label los reordena calse 0 hasta la etiqueta 1000 la 1 de 1001 hasta 2k
 
-
-%% Las nuevas etiquetas no dan bien                                               OJO
 
 %% LDA
 

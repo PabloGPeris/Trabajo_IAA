@@ -15,7 +15,7 @@ nc = length(sep_data); % nº clases
 for i = 0:nc-1
     % k-means para cada grupo
     try
-        ind = kmeans(sep_data{i + 1}', k); 
+        ind = kmeans(sep_data{i + 1}', k, 'replicates', 5); 
     catch ME
         disp 'patata'
     end

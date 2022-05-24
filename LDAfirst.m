@@ -89,8 +89,8 @@ MSE = D*mse(Trainnumbers.image-reconstruidos_des);
 data_lda = reconstruidos';
 coeff_lda = W_lda;
 data_r_lda = proyectados;
-
-%save datos_LDA data_lda coeff_lda latent_pca
+latent_lda = latent;
+%save datos_LDA data_lda coeff_lda latent_lda
 %%
 num = 30;
 figure(1);

@@ -39,9 +39,6 @@ time_class = zeros(10, 1);
 
 for j = 1:K
     for i = 1:I
-        %% PCA previa (nº de dimensiones)
-        % coge solo las dimensiones requeridas en la PCA
-        data_r_pca = data_pca(:, 1:PCA)';
 
         %% Separar datos en train y test aleatoriamente
         % los datos se mezclan (permutan y se separan)
