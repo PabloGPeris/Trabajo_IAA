@@ -58,8 +58,6 @@ for k = 1:K
 
                 new_data_lda = coeff_lda'*new_data;
 
-                %             data_lda = coeff_lda'*data_n;
-
                 %% Entrenar
                 % Separar datos en train y test aleatoriamente
                 % los datos se mezclan (permutan y se separan)
@@ -87,7 +85,7 @@ for k = 1:K
                     %% Clasificador knn
                     % train
                     tic
-                    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10*k),'NumNeighbors',K);
+                    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10*k),'NumNeighbors',jKn);
                     time_train(i,jKn) = toc;
                 catch ME
                     errores = true;
@@ -132,7 +130,7 @@ plot(1:Kn, accuracy_LDA(5,:)*100, 'LineWidth', 1.5);
 hold on
 xlabel('k-neigh')
 ylabel('Accuracy (%)')
-legend('kmeans1', 'kmeans2', 'kmeans3','kmeans4','kmeans5')
+legend('kmeans10', 'kmeans20', 'kmeans30','kmeans40','kmeans50')
 grid on
 %%
 % figure(18);

@@ -1,6 +1,6 @@
 %% Vemos con que dimensiones de la PCA se obtienen mejores valores                              Objetivo
 %% Parece que cada vez un k de mejores resultados     0.25 cambio entre las accu                Conclusion
-clear
+clear all;
 
 addpath("..\")
 load Trainnumbers.mat % para la clasificación básicamente
@@ -8,13 +8,13 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 46;                                           %El que mejores resultados da según knnPCA
+PCA = 45;                                           %El que mejores resultados da según knnPCA
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 50;
+I = 10;
 
 %número de k´s vecinos más cercanos queremos probar 
 K = 10;
@@ -55,7 +55,7 @@ for j = 1:K
         %% Clasificador knn
         % train
         tic
-        knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10),'NumNeighbors',K);
+        knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10),'NumNeighbors',j);
         time_train(i) = toc;
 
         % test (classification)
