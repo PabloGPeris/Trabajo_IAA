@@ -17,7 +17,7 @@ PD = 0.8;
 I = 10;
 
 %número de k´s vecinos más cercanos queremos probar 
-K = 10;
+K = 30;
 
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
