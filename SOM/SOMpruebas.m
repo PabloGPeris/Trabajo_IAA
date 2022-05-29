@@ -9,7 +9,7 @@ load Trainnumbers.mat
 load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 etiquetas = Trainnumbers.label;
-PCA = 20;
+PCA = 30;
 PD = 0.8; % porcentaje (tanto por uno) de datos de training (80/20 tipico)
 
 
@@ -59,9 +59,12 @@ n_neuronas = anchura*altura;
 % selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x36 neuronas y
 % 200 epoch -> accuracy = 0.8875
 
+% CON PCA=25 ;selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x30 neuronas y
+% 200 epoch -> accuracy = 0.90 
+
 
 net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
-net.trainParam.epochs = 200;
+net.trainParam.epochs = 30;
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
 
 % PCA previa solo nº dimensiones requeridas en la PCA
@@ -120,40 +123,43 @@ conf_chart = confusionchart(label_test, clase_predicha);
 accuracy = trace(conf_chart.NormalizedValues)/(N*(1-PD));
 disp(accuracy*100)
 
-% Hacer el grafico accuracy frente a numero de epoch
-% figure
-% plot()
 
 % conf_mat = confusionchart(neuronas_activadas, clase_predicha);
 
 % figure(4)
 % plotsompos(net)
 
-% hold on
-% gscatter(t.valor(1,:), t.valor(2,:), t.clase, 'gc')
-% hold off
-% 
-% %% b) Asignar valor a cada neurona con NN
-% % halla las neuronas activas (en unos y ceros) con los datos de preparación
-% neuronas_activadas_2 = net(p.valor);
-% 
-% % crea red cuya entrada es el SOM, y la salida son las clases
-% net2 = feedforwardnet([]);
-% net2.layers{1}.transferFcn = "logsig";
-% net2.trainParam.showWindow = 0;
-% net2 = train(net2, neuronas_activadas_2, full(ind2vec(p.clase)));
-% 
-% % view(net2)
-% 
-% % ¿qué asigna a cada clase
-% abduskan = net2(eye(n_neuronas))
-% [~, clase2] = max(abduskan)
-% 
-% %% c) Clasificar datos de test con NN
-% % mete los datos de test y obtiene neuronas activadas
-% [~, clase_predicha_2] = max(net2(net(t.valor))) 
-% % probablemente se puedan concatenar las NN de manera directa, pero no sé
-% 
-% % matriz de confusión
-% figure(5)
-% conf_mat_2 = confusionchart(t.clase, clase_predicha_2);
+
+%%
+
+matriznueva = []
+
+sz = [anchura altura];
+[row,col] = ind2sub (sz, 1:1080);
+
+%%
+for i = 1:n_neuronas
+    matriznueva(row(1,i),col(1,i)) = clase(1,i) - 1;
+end
+
+%%
+indices_digitos = [22,2,9,6,31,21,13,4,11,15]
+
+figure
+hold on;
+for i = 1:360
+    disp("iteracion: ")
+    disp(i)
+    % subploteamos la figura en 30x36 subplots
+%     fila = row(1,i);
+%     colu = col(1,i);
+
+    subplot(anchura, altura, i);
+
+    % este es el digito de la neurona i
+    digito_a_pintar = clase(:,i) - 1;
+
+    digit_display(Trainnumbers.image, indices_digitos(digito_a_pintar+1))
+
+end
+hold off;
