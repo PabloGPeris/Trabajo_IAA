@@ -10,7 +10,7 @@ load Trainnumbers.mat
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 3;
+I = 1;
 
 % nº datos
 N = length(Trainnumbers.label); 
@@ -54,14 +54,23 @@ for i = 1:I
     % test (classification)
 %     perf1 = perform(net, data_test, matrix_label_test);
     
-    % Calcular el accuracy
-    accuracy = accuracy + sum(label_test == label_pred2)/round(N*(1-PD));
-%     conf_mat = conf_mat + confusionmat(label_test, label_pred);
+    % performance (MSE)
+    perf = perform(net, matrix_label_test, label_pred)
     
-    disp("iteration " + num2str(i) + "/" + num2str(I))
+    % matriz de confusión
+    figure(91);
+    conf_mat = confusionchart(matrix_label_test, label_pred);
+    
+    accuracy = trace(conf_mat.NormalizedValues)/round(N*(1-PD))
+
+%     % Calcular el accuracy
+%     accuracy = accuracy + sum(label_test == label_pred2)/round(N*(1-PD));
+% %     conf_mat = conf_mat + confusionmat(label_test, label_pred);
+%     
+%     disp("iteration " + num2str(i) + "/" + num2str(I))
 end
 
-% Dividir el accuracy acumulado entre el numero de iteraciones
-accuracy = accuracy / I;
-disp ("accuracy: ")
-disp(accuracy*100)
+% % Dividir el accuracy acumulado entre el numero de iteraciones
+% accuracy = accuracy / I;
+% disp ("accuracy: ")
+% disp(accuracy*100)
