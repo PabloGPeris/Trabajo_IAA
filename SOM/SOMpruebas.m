@@ -64,7 +64,7 @@ n_neuronas = anchura*altura;
 
 
 net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
-net.trainParam.epochs = 200;
+net.trainParam.epochs = 30;
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
 
 % PCA previa solo nº dimensiones requeridas en la PCA
@@ -129,3 +129,37 @@ disp(accuracy*100)
 % figure(4)
 % plotsompos(net)
 
+
+%%
+
+matriznueva = []
+
+sz = [anchura altura];
+[row,col] = ind2sub (sz, 1:1080);
+
+%%
+for i = 1:n_neuronas
+    matriznueva(row(1,i),col(1,i)) = clase(1,i) - 1;
+end
+
+%%
+indices_digitos = [22,2,9,6,31,21,13,4,11,15]
+
+figure
+hold on;
+for i = 1:360
+    disp("iteracion: ")
+    disp(i)
+    % subploteamos la figura en 30x36 subplots
+%     fila = row(1,i);
+%     colu = col(1,i);
+
+    subplot(anchura, altura, i);
+
+    % este es el digito de la neurona i
+    digito_a_pintar = clase(:,i) - 1;
+
+    digit_display(Trainnumbers.image, indices_digitos(digito_a_pintar+1))
+
+end
+hold off;
