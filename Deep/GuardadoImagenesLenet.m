@@ -9,7 +9,7 @@ image = Trainnumbers.image;
 label = Trainnumbers.label;
 
 % tanto por uno de datos que se usan para entrenar (no para test)
-PD = 0.8;
+PD = 1;
 N = length(label); 
 
 x = 32; %dimension de las imagenes de entrada a la net

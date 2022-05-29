@@ -1,5 +1,18 @@
 %%
 
+
+deepNetworkDesigner
+
+
+
+deepNetworkDesigner(net)    
+
+
+
+
+
+
+%% 
 save('trainedNetworklenet','trainedNetwork_1')
 save('trainInfolenet','trainInfoStruct_1')
 

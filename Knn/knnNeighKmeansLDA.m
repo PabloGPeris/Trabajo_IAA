@@ -2,7 +2,7 @@
 clear all;
 addpath("..\")
 load Trainnumbers.mat % para la clasificación básicamente
-load("datos_normalizacion.mat")
+load("datos_normalizacion.mat") 
 
 
 %% Realizamos el kmeans al LDA
@@ -16,7 +16,7 @@ load("datos_normalizacion.mat")
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 10;
+I = 3;
 
 % k-means
 K = 5;
@@ -120,15 +120,15 @@ plot(1:Kn, accuracy_LDA(1,:)*100, 'LineWidth', 1.5);
 hold on
 plot(1:Kn, accuracy_LDA(2,:)*100, 'LineWidth', 1.5);
 hold on
-% plot(1:Kn, accuracy_LDA(3,:)*100, 'LineWidth', 1.5);
-% hold on
-% plot(1:Kn, accuracy_LDA(4,:)*100, 'LineWidth', 1.5);
-% hold on
-% plot(1:Kn, accuracy_LDA(5,:)*100, 'LineWidth', 1.5);
+plot(1:Kn, accuracy_LDA(3,:)*100, 'LineWidth', 1.5);
+hold on
+plot(1:Kn, accuracy_LDA(4,:)*100, 'LineWidth', 1.5);
+hold on
+plot(1:Kn, accuracy_LDA(5,:)*100, 'LineWidth', 1.5);
 hold off
 xlabel('k-neigh')
 ylabel('Accuracy (%)')
-legend('kmeans10', 'kmeans20', 'kmeans30','kmeans40','kmeans50')
+legend('kmeans1', 'kmeans2', 'kmeans3','kmeans4','kmeans5')
 grid on
 %%
 % figure(18);
