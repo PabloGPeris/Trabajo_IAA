@@ -147,7 +147,7 @@ indices_digitos = [22,2,9,6,31,21,13,4,11,15]
 
 figure
 hold on;
-for i = 1:360
+for i = 1:n_neuronas
     disp("iteracion: ")
     disp(i)
     % subploteamos la figura en 30x36 subplots
