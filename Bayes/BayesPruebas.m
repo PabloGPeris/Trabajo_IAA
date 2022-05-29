@@ -10,8 +10,8 @@ load("datos_LDA.mat")
 
 %% Datos
 % dimensiones de la PCA
-% PCA = 15;
-PCA = 'LDA';
+% PCA = 20;
+PCA = "LDA";
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
@@ -20,18 +20,35 @@ PD = 0.8;
 I = 20;
 
 % k-means
-k = 1;
+k = 2;
 
 %% PCA
-if PCA == "LDA"
-    data_r_pca = coeff_lda'*data_n; % en realidad
+
+
+if isstring(PCA) && PCA == "LDA"
+    [new_data, new_label] = clustering_kmeans_v2(data_n, Trainnumbers.label, k);
+    
+    % LDA
+    sep_data = class_separation(new_data, new_label);
+
+    [~, SW, SB, ~] = scatter_matrices(sep_data);
+
+    % se usa la pseudoinversa para el cálculo de la matriz
+    [coeff_lda,latent_lda] = eig(pinv(SW)*SB, 'vector'); % coeff_lda = W_lda
+    [latent_lda, ind] = sort(latent_lda, 'descend');
+    coeff_lda = real(coeff_lda(:, ind(1:10*k-1)));
+
+    new_data = coeff_lda'*new_data;
+
+
 else
     data_r_pca = data_pca(:, 1:PCA)'; 
+
+    [new_data, new_label] = clustering_kmeans(data_n, Trainnumbers.label, k);
 end
 % otra forma -> data_r_pca = coeff_pca(:,1:D_pca)'*data_n ;
 
 %% k - means
-[new_data, new_label] = clustering_kmeans(data_r_pca, Trainnumbers.label, k);
 
 % nº datos
 N = length(Trainnumbers.label); 
@@ -52,9 +69,7 @@ for i = 1:I
     while errores 
         errores = false;
 
-        %% k - means
-        [new_data, new_label] = clustering_kmeans(data_r_pca, Trainnumbers.label, k);
-        
+        %% k - means    
         % Separar datos en train y test aleatoriamente
         % los datos se mezclan (permutan y se separan)
         ind_random = randperm(N);

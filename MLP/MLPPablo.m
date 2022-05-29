@@ -9,7 +9,7 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 100;
+PCA = 20;
 % PCA = "LDA";
 % k = 3; % k-means del LDA
 
@@ -23,7 +23,7 @@ GPU = 'yes';
 I = 1;
 
 % capas
-netLayers = [30 30 30];
+netLayers = [40 10];
 activationFunction = "tansig"; % help nntransfer
 % activationFunction = "logsig"; 
 

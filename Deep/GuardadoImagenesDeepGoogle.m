@@ -33,7 +33,7 @@ data_deepsaver2(image, label, x, N, PD);
 
 %% Prueba lectura
 
-x = imread('../../ImagenesDeep/Test/FIG1.jpeg');
+x = imread('../../ImagenesDeep/Train/0/FIG5.jpeg');
 
 imshow(x);
 

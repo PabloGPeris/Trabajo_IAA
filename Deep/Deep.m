@@ -7,8 +7,6 @@ net = googlenet;
 
 deepNetworkDesigner(net)    %Modificamos la net ya hecha         
 
-
-%net = trainNetwork (imagesTrain, layers, options);
 %% Guardamos la red entrenada
 
 
@@ -21,7 +19,7 @@ save('trainInfoStruct_4','trainInfoStruct_1')
 
 label_test = load ('../../ImagenesDeep/label_test.mat');
 
-b load('trainedNetwork_2.mat');  % La net 1 tienes unos datos de entrenamiento diferentes
+load('trainedNetwork_2.mat');  % La net 1 tienes unos datos de entrenamiento diferentes
 net = trainedNetwork_1;
 
 deepNetworkDesigner(net)

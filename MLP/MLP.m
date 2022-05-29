@@ -10,7 +10,7 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 20;
+PCA = 30;
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
@@ -28,8 +28,8 @@ conf_mat = zeros(10, 10);
 % la de luis: [10 20 6]
 % la mejor de javi hasta el momento [4 4 4]
 net = patternnet([10 8 6], 'traingdm');
-net.trainParam.epochs = 7
-net.trainParam.min_grad = 1e-4
+net.trainParam.epochs = 7;
+net.trainParam.min_grad = 1e-4;
 % net.trainParam
 
 %% PCA previa (nº de dimensiones)

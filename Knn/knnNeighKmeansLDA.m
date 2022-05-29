@@ -2,7 +2,7 @@
 clear all;
 addpath("..\")
 load Trainnumbers.mat % para la clasificación básicamente
-load("datos_normalizacion.mat")
+load("datos_normalizacion.mat") 
 
 
 %% Realizamos el kmeans al LDA
@@ -16,13 +16,13 @@ load("datos_normalizacion.mat")
 PD = 0.8;
 
 % número de iteraciones en el bucle
-I = 10;
+I = 3;
 
 % k-means
 K = 5;
 
 % K-neigh
-Kn = 5;
+Kn = 30;
 
 %% k-means
 N = length(Trainnumbers.label); 
@@ -56,7 +56,7 @@ for k = 1:K
                 [latent_lda, ind] = sort(latent_lda, 'descend');
                 coeff_lda = real(coeff_lda(:, ind(1:10*k-1)));
 
-                new_data_lda = coeff_lda'*new_data;
+                new_data_lda = coeff_lda'*data_n;
 
                 %% Entrenar
                 % Separar datos en train y test aleatoriamente
@@ -65,12 +65,12 @@ for k = 1:K
 
                 % train
                 data_train = new_data_lda(:, ind_random(1:round(N*PD)));
-                label_train = new_label(ind_random(1:round(N*PD)));
+                label_train = Trainnumbers.label(ind_random(1:round(N*PD)));
+
 
                 % test
                 data_test = new_data_lda(:, ind_random(round(N*PD)+1:end));
-                label_test = new_label(ind_random(round(N*PD)+1:end));
-                label_test = mod(label_test, 10); % se reducen cosas
+                label_test = Trainnumbers.label(ind_random(round(N*PD)+1:end));
 
                 %             % train
                 %             data_train = data_lda(:, ind_random(1:round(N*PD)));
@@ -85,7 +85,7 @@ for k = 1:K
                     %% Clasificador knn
                     % train
                     tic
-                    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10*k),'NumNeighbors',jKn);
+                    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10), 'NumNeighbors', jKn);
                     time_train(i,jKn) = toc;
                 catch ME
                     errores = true;
@@ -95,9 +95,7 @@ for k = 1:K
             % test (classification)
             tic
             label_pred = predict(knnModel, data_test')';
-            label_pred = mod(label_pred, 10);
             time_class(i,jKn) = toc;
-            label_pred = mod(label_pred, 10);
 
             accuracy(i,jKn) = sum(label_test == label_pred)/round(N*(1-PD));
             disp("Iteration " + num2str(i) + "/" + num2str(I));
@@ -127,10 +125,10 @@ hold on
 plot(1:Kn, accuracy_LDA(4,:)*100, 'LineWidth', 1.5);
 hold on
 plot(1:Kn, accuracy_LDA(5,:)*100, 'LineWidth', 1.5);
-hold on
+hold off
 xlabel('k-neigh')
 ylabel('Accuracy (%)')
-legend('kmeans10', 'kmeans20', 'kmeans30','kmeans40','kmeans50')
+legend('kmeans1', 'kmeans2', 'kmeans3','kmeans4','kmeans5')
 grid on
 %%
 % figure(18);
