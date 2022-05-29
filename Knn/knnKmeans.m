@@ -7,7 +7,7 @@ load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 46;
+PCA = 45;
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;

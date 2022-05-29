@@ -7,7 +7,7 @@ load("datos_PCA.mat", "data_pca", "latent"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 46;                                           %El que mejores resultados da según knnPCA
+PCA = 45;                                           %El que mejores resultados da según knnPCA
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
