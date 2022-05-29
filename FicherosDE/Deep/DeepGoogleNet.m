@@ -3,9 +3,9 @@ addpath("..\")
 load('trainedNetwork_4.mat');  
 
 %% Prueba
-load ("Test_prueba.mat")
+load('Test_numbers_HW1.mat')
 
-N = length(Trainnumbers.image); % Sacamos dimensiones de los datos de test
+N = length(Test_numbers.image;); % Sacamos dimensiones de los datos de test
 %%
 
 net = trainedNetwork_1;
@@ -14,13 +14,14 @@ for i = 1 : N
 
 data_test = imread(sprintf('../../../ImagenesTest/FIG%d.jpeg',i));
 
-class(1,i) = classify (net, data_test);
+clase(1,i) = classify (net, data_test);
 
 end
 
-Group1_dln = double(class) - 1;
+class = double(clase) - 1;
 
 %%
-
-%save('Group1_dln.mat',"Group1_dln")
+name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
+PCA = 0;
+%save('Group1_dln.mat', "name", "PCA", "class")
 
