@@ -6,37 +6,78 @@ close all
 
 addpath("..\")
 load Trainnumbers.mat
-load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
+load("datos_LDA.mat", "data_lda"); % sin hacer PCA previa
 
 etiquetas = Trainnumbers.label;
-PCA = 20;
-PD = 0.5; % porcentaje (tanto por uno) de datos de training (80/20 tipico)
+LDA = 9;
+PD = 0.8; % porcentaje (tanto por uno) de datos de training (80/20 tipico)
 
-% net = selforgmap([5 5], 100, 3, 'randtop', 'linkdist');
 
-anchura = 18;
-altura = 30;
+% *** Parametros del selforgmap ***
+% net = selforgmap (dimensions, coverSteps, initNeighbor, topologyFcn, distanceFcn);
+% net = selforgmap([8 8], 100, 3, 'hextop', 'linkdist');
+
+% *** topologyFcn ***
+% randtop - una al azar
+% hextop - hexagonal
+% gridtop - cuadrada
+% tritop - triangular
+
+% *** distanceFcn ***
+% linkdist - distancia de enlace (no se cual es)
+% dist - distancia euclidea
+% mandist - distancia Manhattan
+% boxdist - distancia entre dos vectores posicion
+
+anchura = 30;
+altura = 36;
 n_neuronas = anchura*altura;
 
 % Crear SOM bidimensional
-net = selforgmap([anchura altura]);
-net.trainParam.epochs = 30;
+
+% Pruebas previas de estructura del mapa
+
+% selforgmap([anchura altura]); 18x30 neuronas y 200 epoch -> accuracy = 0.864
+
+% selforgmap([anchura altura]); 18x30 neuronas y 300 epoch -> accuracy = 0.855
+
+% selforgmap([anchura altura], 100, 5, 'gridtop', 'mandist'); 18x30 neuronas
+% y 200 epoch -> accuracy = 0.867
+
+% selforgmap([anchura altura], 100, 5, 'gridtop', 'dist'); 18x30 neuronas 
+% y 200 epoch -> accuracy = 0.857
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 18x30 neuronas y
+% 200 epoch -> accuracy = 0.8745
+
+% selforgmap([anchura altura], 100, 6, 'hextop', 'dist'); 18x30 neuronas y
+% 200 epoch -> accuracy = 0.8705
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x30 neuronas y
+% 200 epoch -> accuracy = 0.891
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x36 neuronas y
+% 200 epoch -> accuracy = 0.8875
+
+
+net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
+net.trainParam.epochs = 200;
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
 
 % PCA previa solo nº dimensiones requeridas en la PCA
-data_r_pca = data_pca(:, 1:PCA)';
+data_r_lda = data_lda(:, 1:LDA)';
 
-%% Separacion 80/20 del data_r_pca
+%% Separacion 80/20 del data_r_lda
 
 N = length(Trainnumbers.label); % nº datos
 ind_random = randperm(N); % los datos se mezclan (permutan y se separan)
 
 % datos de entrenamiento
-data_train = data_r_pca(:, ind_random(1:round(N*PD)));
+data_train = data_r_lda(:, ind_random(1:round(N*PD)));
 label_train = etiquetas(ind_random(1:round(N*PD)));
 
 % datos de test
-data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
+data_test = data_r_lda(:, ind_random(round(N*PD)+1:end));
 label_test = etiquetas(ind_random(round(N*PD)+1:end));
 
 
@@ -61,23 +102,28 @@ end
 % cada neurona será de la clase que más la haya activado
 [~, clase] = max(n_apariciones)
 
-
 %% Evaluacion de la red
 
 evaluacion = net(data_test);
 neuronas_activadas_test = vec2ind(evaluacion);
 
-%%
-
-% mira a qué clase pertenece esa neurona, y lo asigna
-clase_predicha = clase(neuronas_activadas_test);
+% Mira a qué clase pertenece esa neurona, y lo asigna
+clase_predicha = clase(neuronas_activadas_test) - 1;
 
 %% matriz de confusión
 
+conf_mat = confusion(label_test, clase_predicha);
 figure(3)
-conf_mat = confusionchart(label_test, clase_predicha);
+conf_chart = confusionchart(label_test, clase_predicha);
 
-accuracy = sum(diag(conf_mat)/N*PD;
+% Calcular accuracy
+accuracy = trace(conf_chart.NormalizedValues)/(N*(1-PD));
+disp(accuracy*100)
+
+% Hacer el grafico accuracy frente a numero de epoch
+% figure
+% plot()
+
 % conf_mat = confusionchart(neuronas_activadas, clase_predicha);
 
 % figure(4)

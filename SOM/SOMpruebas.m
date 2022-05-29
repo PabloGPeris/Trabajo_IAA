@@ -12,15 +12,56 @@ etiquetas = Trainnumbers.label;
 PCA = 20;
 PD = 0.8; % porcentaje (tanto por uno) de datos de training (80/20 tipico)
 
-% net = selforgmap([5 5], 100, 3, 'randtop', 'linkdist');
 
-anchura = 18;
-altura = 30;
+% *** Parametros del selforgmap ***
+% net = selforgmap (dimensions, coverSteps, initNeighbor, topologyFcn, distanceFcn);
+% net = selforgmap([8 8], 100, 3, 'hextop', 'linkdist');
+
+% *** topologyFcn ***
+% randtop - una al azar
+% hextop - hexagonal
+% gridtop - cuadrada
+% tritop - triangular
+
+% *** distanceFcn ***
+% linkdist - distancia de enlace (no se cual es)
+% dist - distancia euclidea
+% mandist - distancia Manhattan
+% boxdist - distancia entre dos vectores posicion
+
+anchura = 30;
+altura = 36;
 n_neuronas = anchura*altura;
 
 % Crear SOM bidimensional
-net = selforgmap([anchura altura]);
-net.trainParam.epochs = 300;
+
+% Pruebas previas de estructura del mapa
+
+% selforgmap([anchura altura]); 18x30 neuronas y 200 epoch -> accuracy = 0.864
+
+% selforgmap([anchura altura]); 18x30 neuronas y 300 epoch -> accuracy = 0.855
+
+% selforgmap([anchura altura], 100, 5, 'gridtop', 'mandist'); 18x30 neuronas
+% y 200 epoch -> accuracy = 0.867
+
+% selforgmap([anchura altura], 100, 5, 'gridtop', 'dist'); 18x30 neuronas 
+% y 200 epoch -> accuracy = 0.857
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 18x30 neuronas y
+% 200 epoch -> accuracy = 0.8745
+
+% selforgmap([anchura altura], 100, 6, 'hextop', 'dist'); 18x30 neuronas y
+% 200 epoch -> accuracy = 0.8705
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x30 neuronas y
+% 200 epoch -> accuracy = 0.891
+
+% selforgmap([anchura altura], 100, 5, 'hextop', 'dist'); 36x36 neuronas y
+% 200 epoch -> accuracy = 0.8875
+
+
+net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
+net.trainParam.epochs = 200;
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
 
 % PCA previa solo nº dimensiones requeridas en la PCA
@@ -66,9 +107,7 @@ end
 evaluacion = net(data_test);
 neuronas_activadas_test = vec2ind(evaluacion);
 
-%%
-
-% mira a qué clase pertenece esa neurona, y lo asigna
+% Mira a qué clase pertenece esa neurona, y lo asigna
 clase_predicha = clase(neuronas_activadas_test) - 1;
 
 %% matriz de confusión
@@ -81,6 +120,9 @@ conf_chart = confusionchart(label_test, clase_predicha);
 accuracy = trace(conf_chart.NormalizedValues)/(N*(1-PD));
 disp(accuracy*100)
 
+% Hacer el grafico accuracy frente a numero de epoch
+% figure
+% plot()
 
 % conf_mat = confusionchart(neuronas_activadas, clase_predicha);
 
