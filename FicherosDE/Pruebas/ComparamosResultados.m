@@ -2,7 +2,7 @@
 
 clasificador1 = load ('Group1_dln.mat','class');
 clasificador1 = clasificador1.class;
-clasificador2 = load ('Group1_knn2.mat','class');
+clasificador2 = load ('Group1_knn.mat','class');
 clasificador2 = clasificador2.class;
 
 %
@@ -35,7 +35,7 @@ N = length(label_man);
 
 
 
-clase_predicha = load ('Group1_knn2.mat','class');
+clase_predicha = load ('Group1_dln.mat','class');
 
 
 conf_mat = confusion(label_man, clase_predicha.class(:,1:N));
