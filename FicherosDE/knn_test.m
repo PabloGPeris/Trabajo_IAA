@@ -31,7 +31,7 @@ class = predict(knnModel, data_test')';  % Etiquetas predichas
 %% Guardado
 name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
 PCA = 0;
-save('Group1_knn.mat', "name", "PCA", "class")
+save('Group1_knn2.mat', "name", "PCA", "class")
 
 
 
