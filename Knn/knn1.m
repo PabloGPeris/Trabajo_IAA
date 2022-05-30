@@ -14,6 +14,9 @@ PD = 0.8;
 
 % número de iteraciones en el bucle
 I = 10;
+
+% Vecinos más cercanos
+K = 3;
 %% PCA previa (nº de dimensiones)
 % coge solo las dimensiones requeridas en la PCA
 data_r_pca = data_pca(:, 1:PCA)';
@@ -50,7 +53,8 @@ for i = 1:I
 
     %% Clasificador knn
     % train
-    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10));
+    %knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10));
+    knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10), 'NumNeighbors', K);
     % test (classification)
     label_pred = predict(knnModel, data_test')';
 

@@ -2,7 +2,7 @@
 
 clasificador1 = load ('Group1_dln.mat','class');
 clasificador1 = clasificador1.class;
-clasificador2 = load ('Group1_knn.mat','class');
+clasificador2 = load ('Group1_som.mat','class');
 clasificador2 = clasificador2.class;
 
 %
@@ -33,10 +33,7 @@ load label_man.mat
 
 N = length(label_man);
 
-
-
-clase_predicha = load ('Group1_dln.mat','class');
-
+clase_predicha = load ('Group1_knn.mat','class');
 
 conf_mat = confusion(label_man, clase_predicha.class(:,1:N));
 figure(3)
@@ -48,7 +45,11 @@ conf_chart = confusionchart(label_man, clase_predicha.class(:,1:N));
 accuracy = trace(conf_chart.NormalizedValues/N);
 disp(accuracy*100)
 
+%% 
+load ('Group1_dln.mat');
+PCA = 784;
 
+save('Group1_dln.mat', "name", "PCA", "class")
 
 
 
