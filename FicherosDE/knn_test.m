@@ -29,13 +29,8 @@ data_test = data_r_pca_test;
 class = predict(knnModel, data_test')';  % Etiquetas predichas
 
 %% Guardado
-<<<<<<< HEAD
-name = {'LuisBF', 'PabloGM', 'JaviDM'};
-PCA = 0;
-=======
 name = {'LuisBF', 'PabloGP', 'JavierDM'};
->>>>>>> dafc6f45f8f6a8bf41de64aed1e4052d48bd8288
-save('Group1_knn2.mat', "name", "PCA", "class")
+save('Group1_knn.mat', "name", "PCA", "class")
 
 
 

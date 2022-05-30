@@ -12,7 +12,7 @@ load datos_normalizacion.mat
 % en tanto por uno, máximo error de reconstrucción que queremos poner
 MSE = 0.7;
 % otra opción: decir el número de variables que quieres directamente
-% PCA = 50;
+PCA = 50;
 % comentar el que no quieras
 
 % esta variable indica si se quiere hacer la reconstrucción o no
@@ -41,14 +41,14 @@ if ~exist('D_pca', 'var')
     % otra forma de obtener los datos de dimensionalidad reducida sería:
     % data_r_pca = coeff_pca(:,1:D_pca)'*data_n ;
     
-%     figure(1);
-%     plot(0:length(latent), [1 MSE_esperado'], 'LineWidth', 1.5);
+    figure(1);
+    plot(0:length(latent), [1 MSE_esperado'], 'LineWidth', 1.5);
 %     xline(D_pca, 'HandleVisibility','off')
 %     yline(MSE_admisible, 'HandleVisibility','off')
-%     xlabel('nº de dimensiones')
-%     ylabel('MSE esperado (por unidad)')
-%     xlim([0 length(latent)])
-%     ylim([0 inf])
+    xlabel('nº de dimensiones')
+    ylabel('MSE esperado (por unidad)')
+    xlim([0 length(latent)])
+    ylim([0 inf])
 else
     % datos ya de dimensionalidad reducida
     data_r_pca = data_pca(:, 1:PCA)'; 

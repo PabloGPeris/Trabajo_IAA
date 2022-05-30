@@ -132,5 +132,5 @@ figure(92);
 
 %%
 % save LDA3 accuracy
-
+save MPLnet trained_net
 
