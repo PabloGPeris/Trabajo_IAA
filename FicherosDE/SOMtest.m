@@ -56,7 +56,9 @@ clase_predicha = clase(neuronas_activadas_test) - 1;
 %% Guardado
 
 class = clase_predicha;
+
 name = {'LuisBF', 'PabloGP', 'JavierDM'};
+
 % PCA = 25;
 save('Group1_som.mat', "name", "PCA", "class")
 

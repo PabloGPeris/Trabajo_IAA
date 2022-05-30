@@ -5,13 +5,13 @@ clear
 
 addpath("..\")
 load Trainnumbers.mat
-load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 %% Datos
 % dimensiones de la PCA
-PCA = 20;
+% PCA = 30;
 % PCA = "LDA";
 % k = 3; % k-means del LDA
+PCA = 0;
 
 % tanto por uno de datos que se usan para entrenar (no para test)
 PD = 0.8;
@@ -23,10 +23,10 @@ GPU = 'yes';
 I = 1;
 
 % capas
-netLayers = [40 10];
+netLayers = [200 150 50];
 activationFunction = "tansig"; % help nntransfer
 % activationFunction = "logsig"; 
-
+% activationFunction = "radbas"; 
 %% Red
 net = feedforwardnet(netLayers);
 % net = feedforwardnet(netLayers, 'traingd');
@@ -37,6 +37,8 @@ end
 net.layers{length(netLayers)+1}.transferFcn = "softmax";
 
 net.performFcn = "mse";
+net.input.processFcns = {'mapminmax'}; % si no, da error
+net.output.processFcns = {'mapminmax'};
 % net.trainParam.epochs =50;
 
 % view(net)
@@ -61,7 +63,11 @@ if isstring(PCA) && PCA == "LDA"
     coeff_lda = real(coeff_lda(:, ind(1:10*k-1)));
 
     data_r_pca = coeff_lda'*data_n;
+elseif PCA == 0
+    load datos_normalizacion.mat
+    data_r_pca = removeconstantrows(data_n);
 else
+    load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
     % PCA
     data_r_pca = data_pca(:, 1:PCA)';
 end
@@ -69,6 +75,7 @@ end
 %% Entrenar red
 max_accuracy = 0;
 accuracy = 0;
+conf_mat = 0;
 
 for i = 1:I
     
@@ -98,10 +105,15 @@ for i = 1:I
     perf = perform(trained_net, output_test, output_pred)
     
     % matriz de confusión
+    conf_mat_i = confusionmat(label_test, label_pred);
+    conf_mat = conf_mat + conf_mat_i;
+
     figure(91);
-    conf_mat = confusionchart(label_test, label_pred);
+    confusionchart(conf_mat_i, ...
+    'ColumnSummary','column-normalized', ...
+    'RowSummary','row-normalized');
     
-    accuracy_i = trace(conf_mat.NormalizedValues)/round(N*(1-PD))
+    accuracy_i = trace(conf_mat_i)/round(N*(1-PD))
     accuracy = accuracy + accuracy_i;
     max_accuracy = max([max_accuracy accuracy_i]);
 
@@ -113,7 +125,12 @@ end
 accuracy = accuracy / I;
 disp ("accuracy: " + num2str(accuracy*100) + " máx: " + num2str(max_accuracy*100))
 
+figure(92);
+    confusionchart(conf_mat, ...
+    'ColumnSummary','column-normalized', ...
+    'RowSummary','row-normalized');
+
 %%
-save LDA3 accuracy
+% save LDA3 accuracy
 
 

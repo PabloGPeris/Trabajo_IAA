@@ -26,8 +26,12 @@ knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10),'NumNeighbors
 data_r_pca_test = data_pca_test(:, 1:PCA)';  %Datos de test con PCA
 data_test = data_r_pca_test;
 
-Group1_knn = predict(knnModel, data_test')';  % Etiquetas predichas
+class = predict(knnModel, data_test')';  % Etiquetas predichas
 
 %% Guardado
+name = {'LuisBF', 'PabloGM', 'JaviDM'};
+PCA = 0;
+save('Group1_knn2.mat', "name", "PCA", "class")
 
-save('Group1_knn.mat',"Group1_knn")
+
+

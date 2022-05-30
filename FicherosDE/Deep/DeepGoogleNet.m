@@ -21,8 +21,7 @@ end
 class = double(clase) - 1;
 
 %%
-class = [0 1 0 1 0 1];
-name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
+name = {'LuisBF', 'PabloGM', 'JaviDM'};
 PCA = 0;
-%save('Group1_dln.mat', "name", "PCA", "class")
+save('Group1_dln.mat', "name", "PCA", "class")
 
