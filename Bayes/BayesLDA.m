@@ -80,9 +80,9 @@ for k = 1:K
     
             try
                 %% Clasificador bayesiano
-                % train
+                % train 'Prior', ones(1, 10*k)
                 tic
-                bayesModel = fitcnb(data_train', label_train', 'Prior', ones(1, 10*k), ...
+                bayesModel = fitcnb(data_train', label_train', ...
                     'Cost', Mcost);
 %                 bayesModel = fitcnb(data_train', label_train', 'Prior', ones(1, 10));
                 time_train(i) = toc;
