@@ -75,3 +75,6 @@ conf_chart = confusionchart(label_test, clase_predicha);
 % Calcular accuracy
 accuracy = trace(conf_chart.NormalizedValues)/(N*(1-PD));
 disp(accuracy*100)
+
+%% Guardamos la red entrenada para probarla con los datos de test en el futuro
+save SOM_entrenado net;

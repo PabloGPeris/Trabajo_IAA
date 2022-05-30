@@ -17,16 +17,13 @@ anchura = 30;
 altura = 36;
 n_neuronas = anchura*altura;
 
-net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
-net.trainParam.epochs = 200;
-net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
-
 % PCA previa solo nº dimensiones requeridas en la PCA
 data_r_pca = data_pca(:, 1:PCA)';
 data_r_pca_test = data_pca_test(:, 1:PCA)';
 
-%% Entrenar SOM
-net = train(net,data_r_pca);
+%% Cargar SOM previamente entrenado y validado con 80/20
+
+load SOM_entrenado;
 
 %% Asignar valor (una etiqueta) a cada neurona
 p_sep = class_separation(data_r_pca, etiquetas); % función mía
@@ -60,4 +57,15 @@ PCA = 25;
 name = {'LuisBF', 'PabloGP', 'JavierDM'};
 
 save('Group1_som.mat', "name", "PCA", "class")
+
+%% evaluacion con labels man
+load label_man.mat
+
+conf_mat = confusion(label_man, clase_predicha(:,1:240));
+figure(3)
+conf_chart = confusionchart(label_man, clase_predicha(:,1:240));
+
+% Calcular accuracy
+accuracy = trace(conf_chart.NormalizedValues/240);
+disp(accuracy*100)
 
