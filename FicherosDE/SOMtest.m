@@ -66,7 +66,7 @@ n_neuronas = anchura*altura;
 
 
 net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
-net.trainParam.epochs = 30;
+net.trainParam.epochs = 200;
 net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
 
 % PCA previa solo nº dimensiones requeridas en la PCA
@@ -118,16 +118,18 @@ clase_predicha = clase(neuronas_activadas_test) - 1;
 
 %% matriz de confusión
 
-% conf_mat = confusion(label_test, clase_predicha);
-% figure(3)
-% conf_chart = confusionchart(label_test, clase_predicha);
-% 
-% % Calcular accuracy
-% accuracy = trace(conf_chart.NormalizedValues)/(N*(1-PD));
-% disp(accuracy*100)
+load label_man.mat
+
+conf_mat = confusion(label_man, clase_predicha(:,1:240));
+figure(3)
+conf_chart = confusionchart(label_man, clase_predicha(:,1:240));
+
+% Calcular accuracy
+accuracy = trace(conf_chart.NormalizedValues/240);
+disp(accuracy*100)
 
 
-% conf_mat = confusionchart(neuronas_activadas, clase_predicha);
+% conf_mat = confusionchart(neuronas_activadas, clase_predicha(:,1:110));
 
 % figure(4)
 % plotsompos(net)
@@ -135,15 +137,23 @@ clase_predicha = clase(neuronas_activadas_test) - 1;
 
 %%
 
-matriznueva = []
+% matriznueva = []
+% 
+% sz = [anchura altura];
+% [row,col] = ind2sub (sz, 1:1080);
+% 
+% %%
+% for i = 1:n_neuronas
+%     matriznueva(row(1,i),col(1,i)) = clase(1,i) - 1;
+% end
 
-sz = [anchura altura];
-[row,col] = ind2sub (sz, 1:1080);
+%% Guardado
 
-%%
-for i = 1:n_neuronas
-    matriznueva(row(1,i),col(1,i)) = clase(1,i) - 1;
-end
+class = clase_predicha;
+name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
+% PCA = 25;
+save('Group1_som.mat', "name", "PCA", "class")
+
 
 %%
 % indices_digitos = [22,2,9,6,31,21,13,4,11,15]
