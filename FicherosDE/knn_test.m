@@ -29,7 +29,7 @@ data_test = data_r_pca_test;
 class = predict(knnModel, data_test')';  % Etiquetas predichas
 
 %% Guardado
-name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
+name = {'LuisBF', 'PabloGM', 'JaviDM'};
 PCA = 0;
 save('Group1_knn2.mat', "name", "PCA", "class")
 

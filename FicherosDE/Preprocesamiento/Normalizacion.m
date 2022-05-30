@@ -4,7 +4,7 @@ load Trainnumbers.mat
 
 sigma_total = std(Trainnumbers.image, 0, 2);
 media_total = mean(Trainnumbers.image, 2);                  
-                                                                %% Mira abajo Pablo
+                                                               
 % encuentra aquellos datos con sigma 0, que se eliminan
 ind_validos = find(sigma_total ~= 0); 
 %data = Trainnumbers.image(ind_validos,:);

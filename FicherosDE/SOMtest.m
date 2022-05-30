@@ -150,7 +150,7 @@ disp(accuracy*100)
 %% Guardado
 
 class = clase_predicha;
-name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
+name = {'LuisBF', 'PabloGM', 'JaviDM'};
 % PCA = 25;
 save('Group1_som.mat', "name", "PCA", "class")
 
