@@ -9,9 +9,9 @@
 %% Guardado de las imagenes          
 
 addpath("..\")
-load Test_prueba.mat
+load('Test_numbers_HW1.mat')
 
-image = Trainnumbers.image;
+image = Test_numbers.image;
 
 N = length(image); 
 x = 224; %dimension de las imagenes de entrada a la net

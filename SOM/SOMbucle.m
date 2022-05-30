@@ -9,7 +9,7 @@ load Trainnumbers.mat
 load("datos_PCA.mat", "data_pca"); % sin hacer PCA previa
 
 etiquetas = Trainnumbers.label;
-PCA = 100;
+PCA = 50;
 PD = 0.8; % porcentaje (tanto por uno) de datos de training (80/20 tipico)
 
 % *** Parametros del selforgmap ***
@@ -32,21 +32,23 @@ anchura = 30;
 altura = 36;
 n_neuronas = anchura*altura;
 
-% Crear SOM bidimensional
-net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
-net.trainParam.epochs = 200;
-net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
-
 
 %% Bucle que va subiendo la PCA y evaluando el accuracy
 
 conf_matrices = {}
 accuracy = []
 
-for j = 1:PCA
+for j = 10:5:PCA
 
+    % Crear SOM bidimensional
+    net = selforgmap([anchura altura], 100, 5, 'hextop', 'dist');
+    net.trainParam.epochs = 200;
+    net.trainParam.showWindow = 1; % 0 = Cierra ventana de visualizacion
+
+    disp("iteracion j = ")
+    disp(j)
     % PCA previa solo nº dimensiones requeridas en la PCA
-    data_r_pca = data_pca(:, 1:PCA)';
+    data_r_pca = data_pca(:, 1:j)';
     
     %% Separacion 80/20 del data_r_pca
     
@@ -61,9 +63,8 @@ for j = 1:PCA
     data_test = data_r_pca(:, ind_random(round(N*PD)+1:end));
     label_test = etiquetas(ind_random(round(N*PD)+1:end));
 
-
     % Entrenar SOM
-    net = train(net,data_train);
+    net = train(net, data_train);
 
     % Asignar valor (una etiqueta) a cada neurona
     p_sep = class_separation(data_train, label_train); % función mía
@@ -101,9 +102,14 @@ for j = 1:PCA
 end
 
 
-%% Hacer el grafico accuracy frente a numero de epoch
+%% Hacer el grafico accuracy frente a numero de epoch HACERLO BIEN
+
+
 figure
-plot(1:PCA, accuracy*100)
+plot(10:5:PCA, accuracy(find(accuracy))*100);
+
+%%
+conf_chart = confusionchart(label_test, clase_predicha);
 
 % conf_mat = confusionchart(neuronas_activadas, clase_predicha);
 
