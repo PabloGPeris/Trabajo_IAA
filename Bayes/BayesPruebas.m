@@ -44,7 +44,7 @@ if isstring(PCA) && PCA == "LDA"
 else
     data_r_pca = data_pca(:, 1:PCA)'; 
 
-    [new_data, new_label] = clustering_kmeans(data_n, Trainnumbers.label, k);
+    [new_data, new_label] = clustering_kmeans_v2(data_n, Trainnumbers.label, k);
 end
 % otra forma -> data_r_pca = coeff_pca(:,1:D_pca)'*data_n ;
 

@@ -21,6 +21,8 @@ for i = 1 : N
     end
 end
 
+cont
+
 Pose = find(~posicion);
 
 
@@ -33,7 +35,7 @@ N = length(label_man);
 
 
 
-clase_predicha = load ('Group1_knn.mat','class');
+clase_predicha = load ('Group1_knn2.mat','class');
 
 
 conf_mat = confusion(label_man, clase_predicha.class(:,1:N));
