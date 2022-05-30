@@ -1,8 +1,8 @@
-
-
+%% KNN
+addpath("..")
 load Trainnumbers.mat
 load("datos_PCA.mat", "data_pca");
-load datos_PCA_test
+load Preprocesamiento\datos_PCA_test
 
 %% Parámetros
 % dimensiones de la PCA
@@ -18,7 +18,7 @@ data_train = data_r_pca;
 
 label_train = Trainnumbers.label;
 
-knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10),'NumNeighbors',K);
+knnModel = fitcknn(data_train', label_train', 'Prior', ones(1, 10), 'NumNeighbors', K);
 
 
 %% Test
@@ -29,8 +29,7 @@ data_test = data_r_pca_test;
 class = predict(knnModel, data_test')';  % Etiquetas predichas
 
 %% Guardado
-name = {'LuisBade', 'PabloPer', 'JaviDiaz'};
-PCA = 0;
+name = {'LuisBF', 'PabloGP', 'JavierDM'};
 save('Group1_knn2.mat', "name", "PCA", "class")
 
 
